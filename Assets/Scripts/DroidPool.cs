@@ -6,7 +6,6 @@ public class DroidPool : ObjectPool<DroidState>
     private DroidState _prefab;
     private Transform _parent;
 
-
     private DroidPool(DroidState prefab, Transform parent)
     {
         _prefab = prefab;
@@ -14,7 +13,7 @@ public class DroidPool : ObjectPool<DroidState>
     }
 
     // コンストラクタ隠蔽.趣味.
-    static DroidPool CreatePool(DroidState prefab, Transform parent)
+    public static DroidPool CreatePool(DroidState prefab, Transform parent)
     {
         return new DroidPool(prefab, parent);
     }
@@ -23,6 +22,4 @@ public class DroidPool : ObjectPool<DroidState>
     {
         return GameObject.Instantiate(_prefab, _parent).GetComponent<DroidState>();
     }
-    
-    
 }

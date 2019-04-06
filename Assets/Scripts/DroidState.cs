@@ -2,5 +2,10 @@
 
 public class DroidState : MonoBehaviour
 {
-    [SerializeField] public Rigidbody _rigidbody;
+    [SerializeField] public Rigidbody Rigidbody;
+
+    public void SetPosition(Vector3 position, Quaternion? rotation = null)
+    {
+        Rigidbody.gameObject.transform.SetPositionAndRotation(position, rotation ?? Random.rotation);
+    }
 }
