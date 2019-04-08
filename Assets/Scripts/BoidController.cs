@@ -12,13 +12,10 @@ public class BoidController : SingletonMonoBehaviour<BoidController>
 
     public const int DroidCount = 20;
     private const int Threshold = 2;
-    private const float Distance = 2.0f;
 
     [SerializeField] private BoidDroid _boidPrefab;
     private BoidsPool _droidPool;
     private UniTask<Unit> _preload;
-
-    private readonly List<BoidDroid> _boids = new List<BoidDroid>();
 
     [SerializeField] private Transform target;
 

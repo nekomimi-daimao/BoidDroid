@@ -51,13 +51,51 @@ public class BoidGroup
     }
 
 
+    private int targetRatio = 4;
+    private int centerRatio = 1;
+    private int separateRatio = 3;
+    private int averageRatio = 2;
+
+    private float SpeedLimit = 3;
+
     public void Calc()
     {
         var target = new Vector2(_target.position.x, _target.position.z);
         foreach (var boidDroid in _boids)
         {
-            var add = (target - boidDroid.PlainPosition()).normalized * Random.value;
-            boidDroid.Rigidbody.AddForce(new Vector3(add.x, 0, add.y));
+            if (Random.Range(0, 20) == 0)
+            {
+                boidDroid.Rigidbody.velocity = Vector3.zero;
+                var force = Random.insideUnitSphere * 10f;
+                force.y = 0;
+                boidDroid.Rigidbody.AddForce(force, ForceMode.Impulse);
+                return;
+            }
+
+            var targetForce = (target - boidDroid.PlainPosition()).normalized * targetRatio;
+
+            var centerForce = (_center - boidDroid.PlainPosition()).normalized * centerRatio;
+            var averageForce = (_velocity - boidDroid.PlainPosition()).normalized * averageRatio;
+
+            var separateForce = Vector2.zero;
+            foreach (var droidSeparate in _boids)
+            {
+                separateForce += droidSeparate.PlainPosition();
+            }
+
+            separateForce /= _boids.Count;
+            separateForce = separateForce.normalized * separateRatio;
+
+            var sumForce = (targetForce + centerForce + averageForce + separateForce).normalized * Random.value;
+
+            boidDroid.Rigidbody.AddForce(new Vector3(sumForce.x, 0, sumForce.y), ForceMode.Impulse);
+
+            var forceRatio = boidDroid.Rigidbody.velocity.sqrMagnitude / SpeedLimit;
+
+            if (forceRatio > 1)
+            {
+                boidDroid.Rigidbody.velocity = ((boidDroid.Rigidbody.velocity / forceRatio) + new Vector3(_velocity.x, 0, _velocity.y)) / 2;
+            }
         }
     }
 }
